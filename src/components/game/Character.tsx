@@ -32,6 +32,11 @@ export function Character({
   const pointer = usePointer();
 
   const head = useMemo(() => scene.getObjectByName("Head") as THREE.Bone | undefined, [scene]);
+  // normalize the model to a ~1.8 unit tall character
+  const modelScale = useMemo(() => {
+    const size = new THREE.Box3().setFromObject(scene).getSize(new THREE.Vector3());
+    return 1.8 / (size.y || 1);
+  }, [scene]);
   const headBase = useRef(new THREE.Euler());
 
   const pos = useRef(new THREE.Vector3(0, 0, 8));
@@ -209,7 +214,7 @@ export function Character({
 
   return (
     <group ref={group}>
-      <primitive object={scene} />
+      <primitive object={scene} scale={modelScale} />
     </group>
   );
 }
