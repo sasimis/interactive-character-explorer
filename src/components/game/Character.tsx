@@ -107,19 +107,29 @@ export function Character({
     const k = keys.current;
     const now = performance.now() / 1000;
 
-    // input direction in camera space
-    const ix = (k.right ? 1 : 0) - (k.left ? 1 : 0);
-    const iz = (k.forward ? 1 : 0) - (k.back ? 1 : 0);
-    const moving = ix !== 0 || iz !== 0;
+    // keyboard + touch stick + gamepad, merged
+    const pad = pollGamepad(dt);
+    let ix = (k.right ? 1 : 0) - (k.left ? 1 : 0) + k.moveX + pad.moveX;
+    let iz = (k.forward ? 1 : 0) - (k.back ? 1 : 0) + k.moveY + pad.moveY;
+    const mag = Math.min(1, Math.hypot(ix, iz));
+    if (mag > 0) {
+      ix /= Math.hypot(ix, iz);
+      iz /= Math.hypot(ix, iz);
+    }
+    const moving = mag > 0.08;
     if (moving) dancing.current = false;
+
+    // camera turn from right stick / drag buttons
+    camYaw.current += k.lookDx + pad.lookDx;
+    k.lookDx = 0;
 
     const sin = Math.sin(camYaw.current);
     const cos = Math.cos(camYaw.current);
     const dir = new THREE.Vector3(ix * cos - iz * sin, 0, -ix * sin - iz * cos);
     if (dir.lengthSq() > 0) dir.normalize();
 
-    const running = k.run && moving;
-    const target = dir.multiplyScalar(running ? RUN_SPEED : WALK_SPEED);
+    const running = (k.run || pad.run) && moving;
+    const target = dir.multiplyScalar((running ? RUN_SPEED : WALK_SPEED) * (moving ? mag : 0));
     vel.current.x += (target.x - vel.current.x) * Math.min(1, ACCEL * dt);
     vel.current.z += (target.z - vel.current.z) * Math.min(1, ACCEL * dt);
     if (!moving) {
