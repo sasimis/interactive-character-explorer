@@ -59,10 +59,12 @@ export function useKeyboard() {
       set(e.code, true);
     };
     const up = (e: KeyboardEvent) => set(e.code, false);
-    const blur = () =>
-      Object.keys(keys.current).forEach((k) => {
-        keys.current[k as keyof Keys] = false;
-      });
+    const blur = () => {
+      const k = keys.current;
+      k.forward = k.back = k.left = k.right = false;
+      k.run = k.jump = k.wave = k.dance = false;
+      k.moveX = k.moveY = 0;
+    };
 
     window.addEventListener("keydown", down);
     window.addEventListener("keyup", up);
