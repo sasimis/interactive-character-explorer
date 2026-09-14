@@ -16,7 +16,9 @@ export type Keys = {
   lookDx: number;
 };
 
-const MAP: Record<string, keyof Keys> = {
+type BoolKey = "forward" | "back" | "left" | "right" | "run" | "jump" | "wave" | "dance";
+
+const MAP: Record<string, BoolKey> = {
   KeyW: "forward",
   ArrowUp: "forward",
   KeyS: "back",
