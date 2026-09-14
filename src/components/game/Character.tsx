@@ -3,7 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { ARENA_RADIUS, OBSTACLES } from "./world";
-import { usePointer, type Keys } from "./useKeyboard";
+import { pollGamepad, usePointer, type Keys } from "./useKeyboard";
 
 const MODEL = "/models/robot.glb";
 useGLTF.preload(MODEL);
