@@ -65,6 +65,8 @@ export function Character({
     let dragging = false;
     let lastX = 0;
     const down = (e: PointerEvent) => {
+      // ignore drags that start on the on-screen controls
+      if ((e.target as Element | null)?.closest?.("[data-nolook]")) return;
       dragging = true;
       lastX = e.clientX;
     };
