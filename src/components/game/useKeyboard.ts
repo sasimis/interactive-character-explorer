@@ -44,6 +44,9 @@ export function useKeyboard() {
     jump: false,
     wave: false,
     dance: false,
+    moveX: 0,
+    moveY: 0,
+    lookDx: 0,
   });
 
   useEffect(() => {
