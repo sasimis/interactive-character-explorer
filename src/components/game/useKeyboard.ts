@@ -9,6 +9,11 @@ export type Keys = {
   jump: boolean;
   wave: boolean;
   dance: boolean;
+  /** analog movement from touch joystick or gamepad, -1..1 */
+  moveX: number;
+  moveY: number;
+  /** accumulated camera turn request (radians), consumed each frame */
+  lookDx: number;
 };
 
 const MAP: Record<string, keyof Keys> = {
